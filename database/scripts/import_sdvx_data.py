@@ -130,7 +130,7 @@ def parse_music_db(tree, batch):
                     ,
                 },
                 {
-                    'level': level,
+                    'level': format_level(level),
                     'illustrator': get(diff, 'illustrator'),
                     'effector': get(diff, 'effected_by'),
                 },
@@ -146,6 +146,12 @@ def parse_music_db(tree, batch):
                 difficulty.has_internal_jacket = True
             db.add(DifficultyImport, batch=batch, difficulty=difficulty, commit=False)
 
+def format_level(lvl: int) -> str:
+    adjustLv = lvl / 10
+    if adjustLv.is_integer():
+        return str(int(adjustLv))
+        
+    return str(adjustLv)
 
 def parse_apecas(tree, batch):
     for tag in tree:
