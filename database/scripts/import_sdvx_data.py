@@ -58,6 +58,10 @@ TRANSLATION_TABLE = {
   "鑷": "ゔ",
   "=墸Σ": "=͟͟͞ Σ",
   "鹹": "Ĥ",
+  "瀑i": "Ài",
+  "疉": "Ö",
+  "鑒": "₩",
+  "Ryu??": "Ryu☆",
 }
 
 
@@ -82,6 +86,7 @@ def diffify(x: str):
         '4': Difficulties.HVN,
         '5': Difficulties.VVD,
         '6': Difficulties.XCD,
+        '7': Difficulties.ULT,
     }.get(x)
 
 def parse_music_db(tree, batch):
@@ -92,7 +97,7 @@ def parse_music_db(tree, batch):
             Music,
             {'id': music_id},
             {
-                'label':            get(info, 'label'),
+                #'label':            get(info, 'label'),
                 'title':            get(info, 'title_name'),
                 'title_yomigana':   get(info, 'title_yomigana'),
                 'artist':           get(info, 'artist_name'),
@@ -104,7 +109,6 @@ def parse_music_db(tree, batch):
                 'background_type':  get(info, 'bg_no', int),
                 'genre_mask':       get(info, 'genre', int),
                 'extra_difficulty': get(info, 'inf_ver', diffify),
-                'version':          get(info, 'version', int),
             },
             commit=False,
             update=True,
