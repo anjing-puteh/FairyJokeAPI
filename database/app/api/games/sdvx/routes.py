@@ -11,7 +11,7 @@ from .models import Apeca, Difficulties, Music
 
 class DifficultySchema(Schema):
     diff: Difficulties
-    level: int
+    level: float
     illustrator: str
     effector: str
 

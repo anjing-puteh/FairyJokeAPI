@@ -34,7 +34,7 @@ class SDVXDifficulties(enum.Enum):
 class SDVXDifficulty(db.IdMixin, db.Base):
     music_id = sa.Column(sa.ForeignKey("sdvx_musics.id"))
     diff = sa.Column("name", sa.Enum(SDVXDifficulties))
-    level = sa.Column(sa.Integer)
+    level = sa.Column(sa.Float)
     illustrator = sa.Column(sa.String)
     effector = sa.Column(sa.String)
     jacket_id = sa.Column(sa.Integer)
@@ -54,12 +54,18 @@ class SDVXDifficulty(db.IdMixin, db.Base):
         return f"{self.music} [{self.name}]"
 
     @property
+    def level_str(self):
+        if self.level <= 17:
+            return int(self.level)
+        return self.level
+
+    @property
     def name(self):
-        return f"{self.diff} {self.level}"
+        return f"{self.diff} {self.level_str}"
 
     @property
     def full(self):
-        return f"{self.diff.value} {self.level}"
+        return f"{self.diff.value} {self.level_str}"
 
     def get_filename(self, jacket_id=False, size=None):
         jacket_id = jacket_id or self.jacket_id
