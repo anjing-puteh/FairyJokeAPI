@@ -1,18 +1,11 @@
 from typing import List, Optional
+from fastapi import Request, Query
+from fastapi.responses import RedirectResponse
 
 from app import Router, Schema, db
-from app.api.games.sdvx.models import (
-    Apeca,
-    Difficulty,
-    Genres,
-    Music,
-    MusicGenre,
-)
-from fastapi import Query, Request
-from fastapi.responses import RedirectResponse
-from sqlalchemy import and_, or_
-
+from app.api.games.sdvx.models import Apeca, Difficulty, Music, MusicGenre, Genres
 from .. import templates
+
 
 router = Router(__name__)
 
@@ -23,43 +16,42 @@ class SearchSchema(Schema):
     text: Optional[str]
 
 
-@router.get("/")
+@router.get('/')
 async def sdvx_index():
-    return RedirectResponse(router.url_path_for("sdvx_musics"))
+    return RedirectResponse(router.url_path_for('sdvx_musics'))
 
 
-@router.get("/musics")
+@router.get('/musics')
 async def sdvx_musics(
-    req: Request,
-    page: int = 1,
-    *,
+    req: Request, page: int = 1,  *,
     level: List[int] = Query([]),
     genre: List[str] = Query([]),
-    text: str = Query(""),
-    artist: str = Query(""),
+    text: str = Query(''),
+    artist: str = Query(''),
 ):
     query = db.session.query(Music).join(Difficulty)
     if level:
-        conds = [
-            and_(Difficulty.level >= lv, Difficulty.level < lv + 1)
-            for lv in level
-        ]
-        if conds:
-            query = query.filter(or_(*conds))
+        #query = query.filter(Difficulty.level.in_(map(int, level)))
+        expanded = []
+        for val in level:
+            val = float(val)
+            if val.is_integer():
+                expanded.extend([val + i/10 for i in range(10)])
+            else:
+                expanded.append(val)
+        query = query.filter(Difficulty.level.in_(expanded))
     if genre:
         genres = [Genres[x] for x in genre]
-        query = query.filter(
-            Music.music_genres.any(MusicGenre.genre.in_(genres))
-        )
+        query = query.filter(Music.music_genres.any(MusicGenre.genre.in_(genres)))
     if text:
         text = text.strip()
         query = query.filter(
-            Music.title.ilike(f"%{text}%")
-            | Music.title_yomigana.ilike(f"%{text}%")
-            | Music.artist.ilike(f"%{text}%")
-            | Music.ascii.ilike(f"%{text}%")
-            | Difficulty.illustrator.ilike(f"%{text}%")
-            | Difficulty.effector.ilike(f"%{text}%")
+            Music.title.ilike(f'%{text}%')
+            | Music.title_yomigana.ilike(f'%{text}%')
+            | Music.artist.ilike(f'%{text}%')
+            | Music.ascii.ilike(f'%{text}%')
+            | Difficulty.illustrator.ilike(f'%{text}%')
+            | Difficulty.effector.ilike(f'%{text}%')
         )
     if artist:
         query = query.filter(Music.artist == artist)
@@ -68,31 +60,26 @@ async def sdvx_musics(
     query = query.distinct()
     pager = db.paginate(query, page)
     return templates.render(
-        "sdvx_musics.html",
-        req,
-        pager=pager,
-        genres=Genres,
+        'sdvx_musics.html', req,
+        pager=pager, genres=Genres,
         search=dict(level=level, genre=genre, text=text, artist=artist),
     )
 
 
-@router.get("/musics/{music_id}")
-async def sdvx_music(
-    music_id: int,
-    req: Request,
-):
+@router.get('/musics/{music_id}')
+async def sdvx_music(music_id: int, req: Request,):
     music = db.session.get(Music, music_id)
-    return templates.render("sdvx_music.html", req, music=music)
+    return templates.render('sdvx_music.html', req, music=music)
 
 
-@router.get("/apecas")
+@router.get('/apecas')
 async def sdvx_apecas(req: Request, page: int = 1):
     query = db.session.query(Apeca)
     pager = db.paginate(query, page, 60)
-    return templates.render("sdvx_apecas.html", req, pager=pager)
+    return templates.render('sdvx_apecas.html', req, pager=pager)
 
 
-@router.get("/apecas/{apeca_id}")
+@router.get('/apecas/{apeca_id}')
 async def sdvx_apeca(apeca_id: int, req: Request):
     apeca = db.session.get(Apeca, apeca_id)
-    return templates.render("sdvx_apeca.html", req, apeca=apeca)
+    return templates.render('sdvx_apeca.html', req, apeca=apeca)

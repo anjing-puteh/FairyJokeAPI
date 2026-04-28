@@ -1,0 +1,9 @@
+fastapi
+
+SQLAlchemy[mypy]
+SQLAlchemy-Utils
+alembic #dev
+
+Jinja2
+
+uvicorn[standard] #dev

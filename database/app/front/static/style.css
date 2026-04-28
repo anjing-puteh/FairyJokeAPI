@@ -3,17 +3,17 @@
         --accent-lighter: #f06292;
 
 
-        --sdvx-nov: #BA55D3;
-        --sdvx-adv: #FFEC4A;
-        --sdvx-exh: #F03C30;
-        --sdvx-mxm: #F5F5F5;
-        --sdvx-ult: linear-gradient(to right, yellow,gold, yellow);
-
-        --sdvx-inf: linear-gradient(to right, yellow,cyan,magenta);
-        --sdvx-grv: #FF9E43;
-        --sdvx-hvn: #7BDDFF;
-        --sdvx-vvd: #FF4795;
-        --sdvx-xcd: #607D8B;
+        --sdvx-nov: #2E267D;
+        --sdvx-adv: #9E6B1B;
+        --sdvx-exh: #861618;
+        --sdvx-mxm: #4D4D4D;
+        --sdvx-inf: #8B2083;
+        --sdvx-grv: #88461B;
+        --sdvx-hvn: #205A70;
+        --sdvx-vvd: #8C266E;
+        --sdvx-xcd: #135380;
+        --sdvx-nbl: #3C5A14;
+        --sdvx-ult: #926C15;
 
         --ddr-b: #64b5f6;
         --ddr-B: #ff9800;
@@ -25,6 +25,10 @@
         --near: gray;
         --miss: darkred;
 }
+
+/*body { background: #1C1C1C; }
+
+input[type=text] { color: white; }*/
 
 nav,
 .btn {
@@ -61,13 +65,22 @@ a,
 
 .card {
         height: calc(100% - 1em);
-        margin-bottom: 1em;
+        margin-bottom: 14px;
         word-break: break-all;
+        border-radius: 10px;
+        padding: 16px;
+        transition: 0.15s ease;
+}
+
+.card:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.05);
 }
 
 .cards .card-content .card-title {
         color: #000;
         font-size: 150%;
+        font-weight: 400;
         line-height: initial;
 }
 
@@ -83,12 +96,32 @@ a,
         margin-bottom: .5em;
 }
 
+.card-image {
+        transition: 0.15s ease;
+}
+
+@media (max-width: 600px) {
+	.card-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/*
+.card-grid {
+	display: grid;
+	grid-template-columns: 2fr 1fr 1fr 1fr;
+	gap: 8px;
+	align-items: center;
+} */
+
 .diff {
-        border-radius: 2px;
-        height: 2em;
+        border-radius: 1px;
+        height: 2.5em;
         line-height: 2em;
         text-align: center;
-        margin: 0 4px;
+        margin: auto;
+        color: white;
+        font-weight: bold;
 }
 
 .diff.none {
@@ -103,19 +136,43 @@ a,
 	width: calc(100% / 5);
 }
 
-.sdvx-diff-NOV { background: var(--sdvx-nov); }
-.sdvx-diff-ADV { background: var(--sdvx-adv); color: #444; }
-.sdvx-diff-EXH { background: var(--sdvx-exh); }
-.sdvx-diff-MXM { background: var(--sdvx-mxm); color: #444; }
-.sdvx-diff-ULT { background: var(--sdvx-ult); }
-.sdvx-diff-INF { background: var(--sdvx-inf); color: #444; }
-.sdvx-diff-GRV { background: var(--sdvx-grv); }
-.sdvx-diff-HVN { background: var(--sdvx-hvn); }
-.sdvx-diff-VVD { background: var(--sdvx-vvd); color: #444; }
-.sdvx-diff-XCD { background: var(--sdvx-xcd); }
+.sdvx-diff-NOV { background: var(--sdvx-nov); border-style: solid; border-color: #5A49FB; border-width: 3px; }
+.sdvx-diff-ADV { background: var(--sdvx-adv); border-style: solid; border-color: #FBB649; border-width: 3px; }
+.sdvx-diff-EXH { background: var(--sdvx-exh); border-style: solid; border-color: #FB494C; border-width: 3px; }
+.sdvx-diff-MXM { background: var(--sdvx-mxm); border-style: solid; border-color: #ACACAC; border-width: 3px; }
+.sdvx-diff-INF { background: var(--sdvx-inf); border-style: solid; border-color: #EE65E5; border-width: 3px; }
+.sdvx-diff-GRV { background: var(--sdvx-grv); border-style: solid; border-color: #FB8449; border-width: 3px; }
+.sdvx-diff-HVN { background: var(--sdvx-hvn); border-style: solid; border-color: #49C9FB; border-width: 3px; }
+.sdvx-diff-VVD { background: var(--sdvx-vvd); border-style: solid; border-color: #FF59CD; border-width: 3px; }
+.sdvx-diff-XCD { background: var(--sdvx-xcd); border-style: solid; border-color: #187FFF; border-width: 3px; }
+.sdvx-diff-NBL { background: var(--sdvx-nbl); border-style: solid; border-color: #D4EF3F; border-width: 3px; }
+.sdvx-diff-ULT { background: var(--sdvx-ult); border-style: solid; border-color: #FFC300; border-width: 3px; }
 
 .ddr-diff-b { background: var(--ddr-b); }
 .ddr-diff-B { background: var(--ddr-B); }
 .ddr-diff-D { background: var(--ddr-D); }
 .ddr-diff-E { background: var(--ddr-E); }
 .ddr-diff-C { background: var(--ddr-C); }
+
+.pagination {
+	text-align: center;
+	margin-top: 25px;
+}
+
+.pagination a {
+	color: #ccc;
+	padding: 6px 10px;
+	margin: 0 3px;
+	text-decoration: none;
+	border-radius: 4px;
+}
+
+.pagination a:hover {
+	background: var(--accent-lighter);
+}
+
+.pagination .current {
+	background: var(--accent);
+	color: white;
+	font-weight: bold;
+}
