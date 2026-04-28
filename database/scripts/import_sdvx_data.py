@@ -28,42 +28,45 @@ def get(node: ET.Element, key: str, coerce=str):
     return coerce(node.get(key) or node.find(key).text)
 
 
+NABLA_INITIAL_DATECODE = "2025122400"
+
 TRANSLATION_TABLE = {
-  "龕": "€",
-  "釁": "🍄",
-  "驩": "Ø",
-  "曦": "à",
-  "齷": "é",
-  "骭": "ü",
-  "齶": "♡",
-  "彜": "ū",
-  "罇": "ê",
-  "雋": "Ǜ",
-  "鬻": "♃",
-  "鬥": "Ã",
-  "鬆": "Ý",
-  "曩": "è",
-  "驫": "ā",
-  "齲": "♥",
-  "騫": "á",
-  "趁": "Ǣ",
-  "鬮": "¡",
-  "盥": "⚙︎",
-  "隍": "︎Ü",
-  "頽": "ä",
-  "餮": "Ƶ",
-  "黻": "*",
-  "蔕": "ũ",
-  "闃": "Ā",
-  "饌": "²",
-  "煢": "ø",
-  "鑷": "ゔ",
-  "=墸Σ": "=͟͟͞ Σ",
-  "鹹": "Ĥ",
-  "瀑i": "Ài",
-  "疉": "Ö",
-  "鑒": "₩",
-  "Ryu??": "Ryu☆",
+    "龕": "€",
+    "釁": "🍄",
+    "驩": "Ø",
+    "曦": "à",
+    "齷": "é",
+    "骭": "ü",
+    "齶": "♡",
+    "彜": "ū",
+    "罇": "ê",
+    "雋": "Ǜ",
+    "鬻": "♃",
+    "鬥": "Ã",
+    "鬆": "Ý",
+    "曩": "è",
+    "驫": "ā",
+    "齲": "♥",
+    "騫": "á",
+    "趁": "Ǣ",
+    "鬮": "¡",
+    "盥": "⚙︎",
+    "隍": "︎Ü",
+    "頽": "ä",
+    "餮": "Ƶ",
+    "黻": "*",
+    "蔕": "ũ",
+    "闃": "Ā",
+    "饌": "²",
+    "煢": "ø",
+    "鑷": "ゔ",
+    "=墸Σ": "=͟͟͞ Σ",
+    "鹹": "Ĥ",
+    "瀑i": "Ài",
+    "疉": "Ö",
+    "鑒": "₩",
+    "Ryu??": "Ryu☆",
+    "壥": "Є",
 }
 
 
@@ -122,6 +125,11 @@ def parse_music_db(tree, batch):
             level = get(diff, "difnum", int)
             if not level:
                 continue
+
+            # nabla
+            if batch.version.name >= NABLA_INITIAL_DATECODE:
+                level = level / 10
+
             difficulty = db.create(
                 Difficulty,
                 {
@@ -199,10 +207,11 @@ if __name__ == "__main__":
     game_name = sys.argv[2]
     for folder in target.parents:
         if folder.stem.startswith("KFC-"):
-            datecode = folder.stem
+            datecode = folder.stem.split("-")[-1]
             break
     else:
         datecode = sys.argv[3]
+    print(f"{datecode=}")
     series = db.session.query(Series).filter_by(short="sdvx").one()
     game = (
         db.session.query(Game).filter_by(short=game_name, series=series).one()
